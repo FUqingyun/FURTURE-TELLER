@@ -38,7 +38,7 @@ export default function FortuneTellerDetailPage() {
       const response = await api.get(`/fortune-tellers/${params.id}`)
       setFortuneTeller(response.data.data)
     } catch (error) {
-      toast.error('获取算命师信息失败')
+      toast.error('获取命理师信息失败')
     } finally {
       setLoading(false)
     }
@@ -77,7 +77,7 @@ export default function FortuneTellerDetailPage() {
     return (
       <div className="min-h-screen">
         <Header />
-        <div className="container mx-auto px-4 py-8 text-center">算命师不存在</div>
+        <div className="container mx-auto px-4 py-8 text-center">命理师不存在</div>
       </div>
     )
   }
@@ -110,7 +110,7 @@ export default function FortuneTellerDetailPage() {
                 </div>
                 <span className="ml-4 text-gray-600 text-lg">({fortuneTeller.reviewCount} 条评价)</span>
               </div>
-              <p className="text-gray-700 text-xl mb-10 leading-relaxed font-light">{fortuneTeller.bio || '专业算命师，为您提供咨询服务'}</p>
+              <p className="text-gray-700 text-xl mb-10 leading-relaxed font-light">{fortuneTeller.bio || '专业命理师，为您提供咨询服务'}</p>
               
               <div className="mb-10">
                 <h3 className="font-semibold text-gray-900 mb-5 text-xl tracking-tight">专长领域</h3>

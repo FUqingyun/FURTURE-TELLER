@@ -94,19 +94,19 @@ router.post('/', protect, async (req, res) => {
   try {
     const { fortuneTellerId, amount, sessionDuration, notes } = req.body;
 
-    // 验证算命师是否存在
+    // 验证命理师是否存在
     const fortuneTeller = await FortuneTeller.findById(fortuneTellerId);
     if (!fortuneTeller) {
       return res.status(404).json({
         success: false,
-        message: '算命师不存在'
+        message: '命理师不存在'
       });
     }
 
     if (!fortuneTeller.isAvailable) {
       return res.status(400).json({
         success: false,
-        message: '该算命师当前不可用'
+        message: '该命理师当前不可用'
       });
     }
 

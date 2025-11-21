@@ -21,14 +21,14 @@ export default function Header() {
             href="/" 
             className="text-2xl font-semibold text-gray-900 tracking-tight hover:opacity-80 transition-opacity duration-200"
           >
-            未来预言师
+            Future Teller
           </Link>
           <nav className="flex items-center space-x-8">
             <Link 
               href="/fortune-tellers" 
               className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors duration-200"
             >
-              算命师
+              命理师
             </Link>
             {user ? (
               <>

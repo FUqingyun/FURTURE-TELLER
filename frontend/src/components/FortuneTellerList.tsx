@@ -31,7 +31,7 @@ export default function FortuneTellerList() {
       const response = await api.get('/fortune-tellers')
       setFortuneTellers(response.data.data)
     } catch (error) {
-      console.error('获取算命师列表失败:', error)
+      console.error('获取命理师列表失败:', error)
     } finally {
       setLoading(false)
     }
@@ -51,7 +51,7 @@ export default function FortuneTellerList() {
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">🔮</div>
-        <p className="text-gray-600 text-lg">暂无算命师，请稍后再试</p>
+        <p className="text-gray-600 text-lg">暂无命理师，请稍后再试</p>
       </div>
     )
   }
@@ -90,7 +90,7 @@ export default function FortuneTellerList() {
               </div>
             </div>
           </div>
-          <p className="text-gray-600 mb-5 line-clamp-2 min-h-[3rem] text-sm leading-relaxed">{teller.bio || '专业算命师，为您提供咨询服务'}</p>
+          <p className="text-gray-600 mb-5 line-clamp-2 min-h-[3rem] text-sm leading-relaxed">{teller.bio || '专业命理师，为您提供咨询服务'}</p>
           <div className="flex flex-wrap gap-2 mb-5">
             {teller.specialties.slice(0, 3).map((specialty, index) => (
               <span

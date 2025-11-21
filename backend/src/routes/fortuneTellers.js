@@ -4,7 +4,7 @@ const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 
-// 获取所有算命师列表
+// 获取所有命理师列表
 router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 10, search, specialty, minPrice, maxPrice } = req.query;
@@ -51,13 +51,13 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: '获取算命师列表失败',
+      message: '获取命理师列表失败',
       error: error.message
     });
   }
 });
 
-// 获取单个算命师详情
+// 获取单个命理师详情
 router.get('/:id', async (req, res) => {
   try {
     const fortuneTeller = await FortuneTeller.findById(req.params.id)
@@ -66,7 +66,7 @@ router.get('/:id', async (req, res) => {
     if (!fortuneTeller) {
       return res.status(404).json({
         success: false,
-        message: '算命师不存在'
+        message: '命理师不存在'
       });
     }
 
@@ -77,21 +77,21 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: '获取算命师详情失败',
+      message: '获取命理师详情失败',
       error: error.message
     });
   }
 });
 
-// 创建算命师资料（需要认证）
+// 创建命理师资料（需要认证）
 router.post('/', protect, async (req, res) => {
   try {
-    // 检查是否已经是算命师
+    // 检查是否已经是命理师
     const existing = await FortuneTeller.findOne({ userId: req.user._id });
     if (existing) {
       return res.status(400).json({
         success: false,
-        message: '您已经是算命师了'
+        message: '您已经是命理师了'
       });
     }
 
@@ -107,13 +107,13 @@ router.post('/', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: '创建算命师资料失败',
+      message: '创建命理师资料失败',
       error: error.message
     });
   }
 });
 
-// 更新算命师资料
+// 更新命理师资料
 router.put('/:id', protect, async (req, res) => {
   try {
     const fortuneTeller = await FortuneTeller.findById(req.params.id);
@@ -121,7 +121,7 @@ router.put('/:id', protect, async (req, res) => {
     if (!fortuneTeller) {
       return res.status(404).json({
         success: false,
-        message: '算命师不存在'
+        message: '命理师不存在'
       });
     }
 
@@ -146,7 +146,7 @@ router.put('/:id', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: '更新算命师资料失败',
+      message: '更新命理师资料失败',
       error: error.message
     });
   }

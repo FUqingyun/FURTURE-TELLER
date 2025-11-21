@@ -92,7 +92,7 @@ export default function OrdersPage() {
               href="/fortune-tellers"
               className="inline-block btn-warm px-10 py-4 rounded-xl text-base font-medium"
             >
-              浏览算命师
+              浏览命理师
             </Link>
           </div>
         ) : (
@@ -117,7 +117,7 @@ export default function OrdersPage() {
                     </div>
                     <div className="space-y-2">
                       <p className="text-gray-700 text-sm">
-                        <span className="font-medium">{user?.role === 'customer' ? '算命师' : '客户'}:</span>{' '}
+                        <span className="font-medium">{user?.role === 'customer' ? '命理师' : '客户'}:</span>{' '}
                         <span className="text-gray-900">{user?.role === 'customer'
                           ? order.fortuneTellerId.name
                           : order.customerId.username}</span>

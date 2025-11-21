@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: '未来预言师 - 专业算命服务平台',
-  description: '为客户和算命师提供专业沟通渠道',
+  description: '为客户和命理师提供专业沟通渠道',
 }
 
 export default function RootLayout({

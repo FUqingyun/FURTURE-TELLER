@@ -96,7 +96,7 @@ export default function RegisterPage() {
                   className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-500 focus:border-transparent transition-all bg-white text-gray-900"
                 >
                   <option value="customer">客户 - 寻求咨询服务</option>
-                  <option value="fortune_teller">算命师 - 提供咨询服务</option>
+                  <option value="fortune_teller">命理师 - 提供咨询服务</option>
                 </select>
               </div>
               <button

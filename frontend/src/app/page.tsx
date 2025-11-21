@@ -37,7 +37,7 @@ export default function Home() {
                 href="/fortune-tellers"
                 className="btn-minimal px-8 py-4 rounded-xl text-base font-medium"
               >
-                浏览算命师
+                浏览命理师
               </Link>
             </div>
           )}
@@ -48,7 +48,7 @@ export default function Home() {
           <div className="card-apple p-8 text-center animate-scale-in">
             <div className="text-5xl mb-6">✨</div>
             <h3 className="text-xl font-semibold mb-3 text-gray-900">专业服务</h3>
-            <p className="text-gray-600 leading-relaxed">经验丰富的算命师为您提供专业咨询</p>
+            <p className="text-gray-600 leading-relaxed">经验丰富的命理师为您提供专业咨询</p>
           </div>
           <div className="card-apple p-8 text-center animate-scale-in" style={{ animationDelay: '0.1s' }}>
             <div className="text-5xl mb-6">🔒</div>
@@ -58,13 +58,13 @@ export default function Home() {
           <div className="card-apple p-8 text-center animate-scale-in" style={{ animationDelay: '0.2s' }}>
             <div className="text-5xl mb-6">💬</div>
             <h3 className="text-xl font-semibold mb-3 text-gray-900">实时沟通</h3>
-            <p className="text-gray-600 leading-relaxed">与算命师实时聊天，获得即时解答</p>
+            <p className="text-gray-600 leading-relaxed">与命理师实时聊天，获得即时解答</p>
           </div>
         </div>
 
         <div className="mb-12">
           <h2 className="text-4xl font-semibold text-gray-900 mb-12 text-center tracking-tight">
-            精选算命师
+            精选命理师
           </h2>
           <FortuneTellerList />
         </div>

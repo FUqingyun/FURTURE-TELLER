@@ -173,7 +173,7 @@ export default function PaymentPage() {
                   <span className="font-medium">订单号:</span> {order.orderNumber}
                 </p>
                 <p className="text-gray-600 text-sm">
-                  <span className="font-medium">算命师:</span> {order.fortuneTellerId.name}
+                  <span className="font-medium">命理师:</span> {order.fortuneTellerId.name}
                 </p>
                 <div className="pt-3 border-t border-gray-200">
                   <p className="text-4xl font-semibold text-gray-900 tracking-tight">¥{order.amount}</p>

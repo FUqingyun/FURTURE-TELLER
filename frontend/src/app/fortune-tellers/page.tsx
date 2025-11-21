@@ -8,7 +8,7 @@ export default function FortuneTellersPage() {
     <div className="min-h-screen">
       <Header />
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">算命师列表</h1>
+        <h1 className="text-3xl font-bold mb-6">命理师列表</h1>
         <FortuneTellerList />
       </main>
     </div>

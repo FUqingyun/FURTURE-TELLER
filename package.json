@@ -1,7 +1,7 @@
 {
   "name": "future-teller-platform",
   "version": "1.0.0",
-  "description": "算命师与客户沟通平台",
+  "description": "命理师与客户沟通平台",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
