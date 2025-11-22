@@ -57,6 +57,32 @@ router.get('/', async (req, res) => {
   }
 });
 
+// 获取当前登录用户的命理师资料
+router.get('/me', protect, async (req, res) => {
+  try {
+    const fortuneTeller = await FortuneTeller.findOne({ userId: req.user._id })
+      .populate('userId', 'username email avatar');
+
+    if (!fortuneTeller) {
+      return res.status(404).json({
+        success: false,
+        message: '未找到命理师资料'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: fortuneTeller
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '获取资料失败',
+      error: error.message
+    });
+  }
+});
+
 // 获取单个命理师详情
 router.get('/:id', async (req, res) => {
   try {

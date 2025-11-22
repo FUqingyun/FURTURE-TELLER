@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { io, Socket } from 'socket.io-client'
 import api from '@/lib/api'
-import Header from '@/components/Header'
 import { useAuth } from '@/contexts/AuthContext'
 import toast from 'react-hot-toast'
 
@@ -133,7 +132,6 @@ export default function ChatPage() {
   if (loading) {
     return (
       <div className="min-h-screen">
-        <Header />
         <div className="container mx-auto px-4 py-8 text-center">加载中...</div>
       </div>
     )
@@ -142,7 +140,6 @@ export default function ChatPage() {
   if (!order) {
     return (
       <div className="min-h-screen">
-        <Header />
         <div className="container mx-auto px-4 py-8 text-center">订单不存在</div>
       </div>
     )
@@ -157,7 +154,6 @@ export default function ChatPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Header />
       <div className="flex-1 container mx-auto px-6 py-8 flex flex-col max-w-5xl">
         <div className="card-apple flex-1 flex flex-col overflow-hidden">
           {/* 聊天头部 */}

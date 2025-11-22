@@ -14,16 +14,18 @@ const io = socketIo(server, {
   }
 });
 
+const path = require('path');
+
 // 中间件
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 静态文件服务 (用于访问上传的文件)
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // 数据库连接
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/future_teller', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/future_teller')
 .then(() => console.log('数据库连接成功'))
 .catch(err => console.error('数据库连接失败:', err));
 
@@ -54,6 +56,7 @@ app.use('/api/fortune-tellers', require('./routes/fortuneTellers'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/messages', require('./routes/messages'));
+app.use('/api/upload', require('./routes/upload'));
 
 // 健康检查
 app.get('/api/health', (req, res) => {

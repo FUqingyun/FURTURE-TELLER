@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import api from '@/lib/api'
-import Header from '@/components/Header'
 import { useAuth } from '@/contexts/AuthContext'
 import toast from 'react-hot-toast'
 
@@ -67,7 +66,6 @@ export default function FortuneTellerDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen">
-        <Header />
         <div className="container mx-auto px-4 py-8 text-center">加载中...</div>
       </div>
     )
@@ -76,7 +74,6 @@ export default function FortuneTellerDetailPage() {
   if (!fortuneTeller) {
     return (
       <div className="min-h-screen">
-        <Header />
         <div className="container mx-auto px-4 py-8 text-center">命理师不存在</div>
       </div>
     )
@@ -84,7 +81,6 @@ export default function FortuneTellerDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <main className="container mx-auto px-6 py-12">
         <div className="card-apple p-10 md:p-16 animate-fade-in">
           <div className="flex flex-col md:flex-row gap-12">

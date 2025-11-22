@@ -9,11 +9,17 @@
     "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "check-env": "node check-env.js"
   },
-  "keywords": ["fortune-teller", "platform"],
+  "keywords": [
+    "fortune-teller",
+    "platform"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "framer-motion": "^12.23.24",
+    "lunar-javascript": "^1.7.7"
   }
 }
-

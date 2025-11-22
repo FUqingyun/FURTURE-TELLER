@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import api from '@/lib/api'
-import Header from '@/components/Header'
 import { useAuth } from '@/contexts/AuthContext'
 
 interface Order {
@@ -69,7 +68,6 @@ export default function OrdersPage() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen">
-        <Header />
         <div className="container mx-auto px-4 py-8 text-center">加载中...</div>
       </div>
     )
@@ -77,7 +75,6 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <main className="container mx-auto px-6 py-12">
         <div className="mb-12 animate-fade-in">
           <h1 className="text-5xl font-semibold text-gray-900 mb-3 tracking-tight">我的订单</h1>

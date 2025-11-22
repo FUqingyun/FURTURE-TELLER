@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import api from '@/lib/api'
-import Header from '@/components/Header'
 import toast from 'react-hot-toast'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
@@ -144,7 +143,6 @@ export default function PaymentPage() {
   if (loading) {
     return (
       <div className="min-h-screen">
-        <Header />
         <div className="container mx-auto px-4 py-8 text-center">加载中...</div>
       </div>
     )
@@ -153,7 +151,6 @@ export default function PaymentPage() {
   if (!order) {
     return (
       <div className="min-h-screen">
-        <Header />
         <div className="container mx-auto px-4 py-8 text-center">订单不存在</div>
       </div>
     )
@@ -161,7 +158,6 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <main className="container mx-auto px-6 py-12">
         <div className="max-w-2xl mx-auto animate-fade-in">
           <div className="card-apple p-10">

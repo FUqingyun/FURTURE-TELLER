@@ -3,7 +3,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import Header from '@/components/Header'
 import FortuneTellerList from '@/components/FortuneTellerList'
 import Link from 'next/link'
 
@@ -13,7 +12,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <main className="container mx-auto px-6 py-20">
         {/* Hero Section - Apple风格 */}
         <div className="text-center mb-24 animate-fade-in">

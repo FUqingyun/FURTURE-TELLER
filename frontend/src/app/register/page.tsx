@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import Header from '@/components/Header'
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('')
@@ -33,7 +32,6 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6 py-20">
         <div className="max-w-md w-full animate-fade-in">
           <div className="card-apple p-10">
