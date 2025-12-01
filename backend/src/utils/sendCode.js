@@ -48,12 +48,6 @@ const sendEmail = async (email, code) => {
     <tr>
       <td align="center" style="padding: 40px 20px;">
         <table role="presentation" style="max-width: 600px; width: 100%; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-          <!-- Header -->
-          <tr>
-            <td style="padding: 40px 40px 20px 40px; text-align: center; border-bottom: 1px solid #e0e0e0;">
-              <h1 style="margin: 0; font-size: 24px; font-weight: 400; color: #202124;">易玄宏</h1>
-            </td>
-          </tr>
           
           <!-- Content -->
           <tr>
