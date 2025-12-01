@@ -140,16 +140,28 @@ export default function FortuneTellerDetailPage() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-8 border-t border-gray-200">
                 <div>
                   <p className="text-5xl font-semibold text-gray-900 mb-2 tracking-tight">
-                    ¥{fortuneTeller.pricePerSession}
+                    ${fortuneTeller.pricePerSession}
                   </p>
                   <p className="text-gray-500 text-sm">每次咨询</p>
                 </div>
-                <button
-                  onClick={handleBook}
-                  className="w-full sm:w-auto btn-warm px-12 py-4 rounded-xl text-lg font-medium"
-                >
-                  立即预约
-                </button>
+                {/* 只有客户角色才能预约，命理师自己查看时不显示预约按钮 */}
+                {(!user || user.role === 'customer') ? (
+                  <button
+                    onClick={handleBook}
+                    className="w-full sm:w-auto btn-warm px-12 py-4 rounded-xl text-lg font-medium"
+                  >
+                    立即预约
+                  </button>
+                ) : (
+                  user.role === 'fortune_teller' && (
+                    <button
+                      onClick={() => router.push('/profile')}
+                      className="w-full sm:w-auto btn-minimal px-12 py-4 rounded-xl text-lg font-medium"
+                    >
+                      编辑资料
+                    </button>
+                  )
+                )}
               </div>
             </div>
           </div>

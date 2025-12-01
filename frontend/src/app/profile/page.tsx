@@ -244,7 +244,7 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      咨询价格 (元/次) <span className="text-red-500">*</span>
+                      咨询价格 (美元/次) <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="number"

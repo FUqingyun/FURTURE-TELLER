@@ -105,7 +105,7 @@ function CheckoutForm({ order, onSuccess }: { order: Order; onSuccess: () => voi
             处理中...
           </span>
         ) : (
-          `支付 ¥${order.amount}`
+          `支付 $${order.amount}`
         )}
       </button>
     </form>
@@ -172,7 +172,7 @@ export default function PaymentPage() {
                   <span className="font-medium">命理师:</span> {order.fortuneTellerId.name}
                 </p>
                 <div className="pt-3 border-t border-gray-200">
-                  <p className="text-4xl font-semibold text-gray-900 tracking-tight">¥{order.amount}</p>
+                  <p className="text-4xl font-semibold text-gray-900 tracking-tight">${order.amount}</p>
                   <p className="text-gray-500 text-sm mt-1">支付金额</p>
                 </div>
               </div>

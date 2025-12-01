@@ -71,8 +71,8 @@ export default function Dashboard() {
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm font-medium mb-2">今日收入</div>
-            <div className="text-3xl font-bold text-gray-900">¥{stats.todayEarnings}</div>
-            <div className="text-xs text-gray-400 mt-2">本周累计: ¥0</div>
+            <div className="text-3xl font-bold text-gray-900">${stats.todayEarnings}</div>
+            <div className="text-xs text-gray-400 mt-2">本周累计: $0</div>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm font-medium mb-2">新客户</div>
@@ -91,10 +91,6 @@ export default function Dashboard() {
           <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900 mb-6">快捷入口</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Link href="/dashboard/bazi" className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl hover:bg-warm-50 transition-colors group">
-                <div className="w-12 h-12 bg-warm-100 text-warm-600 rounded-full flex items-center justify-center text-2xl mb-3 group-hover:bg-warm-200 transition-colors">☯️</div>
-                <span className="text-sm font-medium text-gray-700">四柱排盘</span>
-              </Link>
               <Link href="/dashboard/orders" className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors group">
                 <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-3 group-hover:bg-blue-200 transition-colors">📋</div>
                 <span className="text-sm font-medium text-gray-700">订单管理</span>
@@ -114,10 +110,6 @@ export default function Dashboard() {
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">平台公告</h2>
             <div className="space-y-4">
-              <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
-                <div className="text-sm font-medium text-blue-800 mb-1">新功能上线</div>
-                <p className="text-xs text-blue-600">排盘系统已更新，新增流年大运分析功能。</p>
-              </div>
               <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                 <div className="text-sm font-medium text-gray-800 mb-1">结算通知</div>
                 <p className="text-xs text-gray-600">上周收益已结算，请前往收益中心查看。</p>

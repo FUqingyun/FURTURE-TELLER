@@ -94,10 +94,39 @@ export default function ChatPage() {
     })
 
     newSocket.on('receive-message', (data: Message) => {
-      setMessages((prev) => [...prev, data])
+      setMessages((prev) => {
+        if (prev.some(m => m._id === data._id)) return prev
+        return [...prev, data]
+      })
+    })
+
+    newSocket.on('message-recalled', (messageId: string) => {
+      setMessages(prev => prev.map(msg => 
+        msg._id === messageId 
+          ? { ...msg, messageType: 'recall', content: '此消息已撤回' } 
+          : msg
+      ))
     })
 
     setSocket(newSocket)
+  }
+
+  const handleRecall = async (messageId: string) => {
+    if (!confirm('确定要撤回这条消息吗？')) return
+
+    try {
+      await api.post(`/messages/${messageId}/recall`)
+      // 本地更新
+      setMessages(prev => prev.map(msg => 
+        msg._id === messageId 
+          ? { ...msg, messageType: 'recall', content: '此消息已撤回' } 
+          : msg
+      ))
+      // 通知对方
+      socket?.emit('recall-message', { orderId: params.id, messageId })
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || '撤回失败')
+    }
   }
 
   const scrollToBottom = () => {
@@ -146,7 +175,8 @@ export default function ChatPage() {
   }
 
   // 确定聊天对象
-  const isCustomer = order.customerId._id === user?.id
+  const currentUserId = (user as any)?._id || user?.id
+  const isCustomer = order.customerId._id === currentUserId
   const chatPartner = isCustomer ? order.fortuneTellerId : order.customerId
   const chatPartnerName = isCustomer 
     ? order.fortuneTellerId.name 
@@ -180,11 +210,25 @@ export default function ChatPage() {
               </div>
             ) : (
               messages.map((message) => {
-                const isSender = message.senderId._id === user?.id
+                const currentUserId = (user as any)?._id || user?.id
+                const isSender = message.senderId._id === currentUserId
+                const isRecalled = message.messageType === 'recall'
+                const canRecall = isSender && !isRecalled && (Date.now() - new Date(message.createdAt).getTime() < 2 * 60 * 1000)
+
+                if (isRecalled) {
+                  return (
+                    <div key={message._id} className="flex justify-center my-2 animate-fade-in">
+                      <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
+                        {isSender ? '您撤回了一条消息' : '对方撤回了一条消息'}
+                      </span>
+                    </div>
+                  )
+                }
+
                 return (
                   <div
                     key={message._id}
-                    className={`flex ${isSender ? 'justify-end' : 'justify-start'} items-end gap-3 animate-fade-in`}
+                    className={`flex ${isSender ? 'justify-end' : 'justify-start'} items-end gap-3 animate-fade-in group relative`}
                   >
                     {!isSender && (
                       <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -215,6 +259,14 @@ export default function ChatPage() {
                         })}
                       </div>
                     </div>
+                    {canRecall && (
+                      <button
+                        onClick={() => handleRecall(message._id)}
+                        className="absolute -top-6 right-0 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        撤回
+                      </button>
+                    )}
                     {isSender && (
                       <div className="w-10 h-10 bg-gradient-to-br from-warm-400 to-warm-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
                         <span className="text-white text-xs font-semibold">

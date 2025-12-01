@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -13,8 +14,6 @@ const io = socketIo(server, {
     methods: ["GET", "POST"]
   }
 });
-
-const path = require('path');
 
 // 中间件
 app.use(cors());
@@ -44,6 +43,11 @@ io.on('connection', (socket) => {
     io.to(data.orderId).emit('receive-message', data);
   });
 
+  // 撤回消息
+  socket.on('recall-message', (data) => {
+    io.to(data.orderId).emit('message-recalled', data.messageId);
+  });
+
   // 断开连接
   socket.on('disconnect', () => {
     console.log('用户断开连接:', socket.id);
@@ -69,6 +73,3 @@ server.listen(PORT, () => {
 });
 
 module.exports = { app, io };
-
-
-

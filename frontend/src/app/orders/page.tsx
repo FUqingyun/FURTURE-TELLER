@@ -121,7 +121,7 @@ export default function OrdersPage() {
                       </p>
                       <p className="text-gray-700 text-sm">
                         <span className="font-medium">金额:</span>{' '}
-                        <span className="text-warm-600 font-semibold text-xl">¥{order.amount}</span>
+                        <span className="text-warm-600 font-semibold text-xl">${order.amount}</span>
                       </p>
                       <p className="text-gray-500 text-xs">
                         创建时间: {new Date(order.createdAt).toLocaleString('zh-CN')}

@@ -62,7 +62,6 @@ export default function Header() {
               <>
                 <NavLink href="/dashboard">工作台</NavLink>
                 <NavLink href="/dashboard/orders">订单</NavLink>
-                <NavLink href="/dashboard/bazi">排盘</NavLink>
                 <NavLink href="/profile">服务</NavLink>
               </>
             ) : (

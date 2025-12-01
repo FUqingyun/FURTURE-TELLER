@@ -33,19 +33,19 @@ export default function EarningsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-gradient-to-br from-warm-500 to-warm-600 p-6 rounded-2xl text-white shadow-lg">
             <div className="text-white/80 text-sm font-medium mb-2">可提现金额</div>
-            <div className="text-4xl font-bold">¥0.00</div>
+            <div className="text-4xl font-bold">$0.00</div>
             <button className="mt-6 w-full py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors backdrop-blur-sm">
               申请提现
             </button>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm font-medium mb-2">本月预估收入</div>
-            <div className="text-3xl font-bold text-gray-900">¥0.00</div>
-            <div className="text-xs text-gray-400 mt-2">上月同期: ¥0.00</div>
+            <div className="text-3xl font-bold text-gray-900">$0.00</div>
+            <div className="text-xs text-gray-400 mt-2">上月同期: $0.00</div>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm font-medium mb-2">累计总收入</div>
-            <div className="text-3xl font-bold text-gray-900">¥0.00</div>
+            <div className="text-3xl font-bold text-gray-900">$0.00</div>
           </div>
         </div>
 

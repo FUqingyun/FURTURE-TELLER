@@ -127,7 +127,7 @@ export default function FortuneTellerOrders() {
                       客户: {order.customerId.username}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      咨询费用: <span className="font-medium text-warm-600">¥{order.amount}</span>
+                      咨询费用: <span className="font-medium text-warm-600">${order.amount}</span>
                     </p>
                   </div>
                   

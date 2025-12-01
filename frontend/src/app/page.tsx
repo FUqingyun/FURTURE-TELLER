@@ -23,19 +23,34 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
             专业的算命咨询服务，为您揭示人生的无限可能
           </p>
-          {!user && (
-            <div className="flex justify-center gap-4 animate-slide-up">
+          {/* 只有未登录用户或普通客户才显示 */}
+          {(!user || user.role === 'customer') ? (
+            <>
+              {!user && (
+                <div className="flex justify-center gap-4 animate-slide-up">
+                  <Link
+                    href="/register"
+                    className="btn-warm px-8 py-4 rounded-xl text-base font-medium"
+                  >
+                    立即开始
+                  </Link>
+                  <Link
+                    href="/fortune-tellers"
+                    className="btn-minimal px-8 py-4 rounded-xl text-base font-medium"
+                  >
+                    浏览命理师
+                  </Link>
+                </div>
+              )}
+            </>
+          ) : (
+            /* 命理师显示工作台入口 */
+            <div className="flex justify-center animate-slide-up">
               <Link
-                href="/register"
+                href="/dashboard"
                 className="btn-warm px-8 py-4 rounded-xl text-base font-medium"
               >
-                立即开始
-              </Link>
-              <Link
-                href="/fortune-tellers"
-                className="btn-minimal px-8 py-4 rounded-xl text-base font-medium"
-              >
-                浏览命理师
+                前往工作台
               </Link>
             </div>
           )}
@@ -60,12 +75,15 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mb-12">
-          <h2 className="text-4xl font-semibold text-gray-900 mb-12 text-center tracking-tight">
-            精选命理师
-          </h2>
-          <FortuneTellerList />
-        </div>
+        {/* 只有未登录用户或普通客户显示推荐列表 */}
+        {(!user || user.role === 'customer') && (
+          <div className="mb-12">
+            <h2 className="text-4xl font-semibold text-gray-900 mb-12 text-center tracking-tight">
+              精选命理师
+            </h2>
+            <FortuneTellerList />
+          </div>
+        )}
       </main>
     </div>
   )

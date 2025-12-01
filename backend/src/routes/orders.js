@@ -16,7 +16,16 @@ router.get('/', protect, async (req, res) => {
     if (req.user.role === 'customer') {
       query.customerId = req.user._id;
     } else if (req.user.role === 'fortune_teller') {
-      query.fortuneTellerId = req.user._id;
+      const ft = await FortuneTeller.findOne({ userId: req.user._id });
+      if (ft) {
+        query.fortuneTellerId = ft._id;
+      } else {
+        return res.json({
+          success: true,
+          data: [],
+          pagination: { page: 1, limit: 10, total: 0, pages: 0 }
+        });
+      }
     }
     
     if (status) {
@@ -25,7 +34,11 @@ router.get('/', protect, async (req, res) => {
 
     const orders = await Order.find(query)
       .populate('customerId', 'username email avatar')
-      .populate('fortuneTellerId', 'name avatar pricePerSession')
+      .populate({
+        path: 'fortuneTellerId',
+        select: 'name avatar pricePerSession userId', // 增加 userId
+        populate: { path: 'userId', select: 'username' } // 如果需要关联的用户信息
+      })
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ createdAt: -1 });
@@ -56,7 +69,10 @@ router.get('/:id', protect, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('customerId', 'username email avatar')
-      .populate('fortuneTellerId', 'name avatar pricePerSession');
+      .populate({
+        path: 'fortuneTellerId',
+        select: 'name avatar pricePerSession userId' // 增加 userId
+      });
 
     if (!order) {
       return res.status(404).json({
@@ -110,7 +126,11 @@ router.post('/', protect, async (req, res) => {
       });
     }
 
+    // 生成订单号: ORD + 时间戳 + 4位随机数
+    const orderNumber = `ORD${Date.now()}${Math.floor(1000 + Math.random() * 9000)}`;
+
     const order = await Order.create({
+      orderNumber,
       customerId: req.user._id,
       fortuneTellerId,
       amount: amount || fortuneTeller.pricePerSession,
@@ -126,7 +146,8 @@ router.post('/', protect, async (req, res) => {
       success: true,
       data: populatedOrder
     });
-  } catch (error) {
+    } catch (error) {
+    console.error('创建订单失败:', error);
     res.status(500).json({
       success: false,
       message: '创建订单失败',

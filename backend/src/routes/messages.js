@@ -12,7 +12,7 @@ router.get('/order/:orderId', protect, async (req, res) => {
     const { page = 1, limit = 50 } = req.query;
 
     // 验证订单权限
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate('fortuneTellerId');
     if (!order) {
       return res.status(404).json({
         success: false,
@@ -21,7 +21,7 @@ router.get('/order/:orderId', protect, async (req, res) => {
     }
 
     const isOwner = order.customerId.toString() === req.user._id.toString() ||
-                    order.fortuneTellerId.toString() === req.user._id.toString();
+                    (order.fortuneTellerId && order.fortuneTellerId.userId.toString() === req.user._id.toString());
     
     if (!isOwner && req.user.role !== 'admin') {
       return res.status(403).json({
@@ -72,7 +72,7 @@ router.post('/', protect, async (req, res) => {
     const { orderId, content, messageType = 'text' } = req.body;
 
     // 验证订单
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate('fortuneTellerId');
     if (!order) {
       return res.status(404).json({
         success: false,
@@ -82,7 +82,7 @@ router.post('/', protect, async (req, res) => {
 
     // 检查权限
     const isOwner = order.customerId.toString() === req.user._id.toString() ||
-                    order.fortuneTellerId.toString() === req.user._id.toString();
+                    (order.fortuneTellerId && order.fortuneTellerId.userId.toString() === req.user._id.toString());
     
     if (!isOwner) {
       return res.status(403).json({
@@ -101,7 +101,7 @@ router.post('/', protect, async (req, res) => {
 
     // 确定接收者
     const receiverId = order.customerId.toString() === req.user._id.toString() 
-      ? order.fortuneTellerId 
+      ? order.fortuneTellerId.userId // 使用 populated 的 userId
       : order.customerId;
 
     const message = await Message.create({
@@ -161,6 +161,56 @@ router.patch('/:messageId/read', protect, async (req, res) => {
     res.status(500).json({
       success: false,
       message: '标记消息失败',
+      error: error.message
+    });
+  }
+});
+
+// 撤回消息
+router.post('/:messageId/recall', protect, async (req, res) => {
+  try {
+    const message = await Message.findById(req.params.messageId);
+
+    if (!message) {
+      return res.status(404).json({
+        success: false,
+        message: '消息不存在'
+      });
+    }
+
+    // 检查是否是发送者
+    if (message.senderId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: '无权撤回此消息'
+      });
+    }
+
+    // 检查时间限制 (2分钟)
+    const now = new Date();
+    const messageTime = new Date(message.createdAt);
+    const diffMinutes = (now - messageTime) / 1000 / 60;
+
+    if (diffMinutes > 2) {
+      return res.status(400).json({
+        success: false,
+        message: '超过2分钟无法撤回'
+      });
+    }
+
+    // 更新消息状态
+    message.messageType = 'recall';
+    message.content = '此消息已撤回';
+    await message.save();
+
+    res.json({
+      success: true,
+      data: message
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: '撤回消息失败',
       error: error.message
     });
   }

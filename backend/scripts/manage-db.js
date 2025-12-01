@@ -6,6 +6,8 @@ const path = require('path');
 // 加载环境变量
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
+const Order = require('../src/models/Order');
+
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/future_teller');
@@ -75,6 +77,25 @@ const deleteAllUsers = async () => {
     console.log(`\n⚠️  已清空所有用户，共删除 ${result.deletedCount} 条记录。`);
   } catch (error) {
     console.error('❌ 清空用户失败:', error.message);
+  }
+};
+
+const updateOrderStatus = async (orderId, status) => {
+  try {
+    let order = await Order.findById(orderId);
+    if (!order) {
+      console.log(`❌ 未找到订单: ${orderId}`);
+      return;
+    }
+
+    order.status = status;
+    if (status === 'paid') order.startTime = new Date();
+    if (status === 'completed') order.endTime = new Date();
+    
+    await order.save();
+    console.log(`\n✅ 订单状态更新成功: ${order.orderNumber} -> ${status}`);
+  } catch (error) {
+    console.error('❌ 更新订单失败:', error.message);
   }
 };
 
@@ -155,12 +176,20 @@ const main = async () => {
     case 'clean-users-confirm':
       await deleteAllUsers();
       break;
+    case 'update-order':
+      if (!param || !args[2]) {
+        console.log('❌ 请指定订单ID和状态 (如: update-order <id> paid)');
+      } else {
+        await updateOrderStatus(param, args[2]);
+      }
+      break;
     default:
       console.log('\n用法: node backend/scripts/manage-db.js <command>');
       console.log('命令:');
       console.log('  list             - 列出所有用户');
       console.log('  create-customer  - 创建测试客户');
       console.log('  delete <email>   - 删除指定用户 (Email 或 ID)');
+      console.log('  update-order     - 更新订单状态 (update-order <id> paid)');
       console.log('  clean-users      - 清空所有用户 (需要二次确认)');
       console.log('  collections      - 列出所有集合');
       console.log('  inspect <name>   - 查看集合数据');
