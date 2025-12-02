@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { io, Socket } from 'socket.io-client'
 import api from '@/lib/api'
@@ -36,11 +36,13 @@ interface Order {
   fortuneTellerId: {
     _id: string
     name: string
+    userId: string // Ensure this exists in API response
   }
 }
 
 export default function ChatPage() {
   const params = useParams()
+  const router = useRouter()
   const { user } = useAuth()
   const [order, setOrder] = useState<Order | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
@@ -129,6 +131,18 @@ export default function ChatPage() {
     }
   }
 
+  const handleCompleteOrder = async () => {
+    if (!confirm('确定要结束咨询并完成订单吗？')) return
+
+    try {
+      await api.patch(`/orders/${params.id}/status`, { status: 'completed' })
+      toast.success('订单已完成')
+      fetchOrder() // Refresh order status
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || '操作失败')
+    }
+  }
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -177,10 +191,12 @@ export default function ChatPage() {
   // 确定聊天对象
   const currentUserId = (user as any)?._id || user?.id
   const isCustomer = order.customerId._id === currentUserId
-  const chatPartner = isCustomer ? order.fortuneTellerId : order.customerId
   const chatPartnerName = isCustomer 
     ? order.fortuneTellerId.name 
     : order.customerId.username
+  
+  // Is current user the fortune teller?
+  const isFortuneTeller = user?.role === 'fortune_teller'
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -193,10 +209,32 @@ export default function ChatPage() {
                 <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">
                   与 {chatPartnerName} 的聊天
                 </h2>
-                <p className="text-sm text-gray-500 mt-1">订单号: {order.orderNumber}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="text-sm text-gray-500">订单号: {order.orderNumber}</p>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                    order.status === 'in_progress' ? 'bg-green-100 text-green-800' :
+                    order.status === 'completed' ? 'bg-gray-100 text-gray-800' :
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {order.status === 'in_progress' ? '进行中' : 
+                     order.status === 'completed' ? '已完成' : '待接单'}
+                  </span>
+                </div>
               </div>
-              <div className="w-14 h-14 bg-gradient-to-br from-warm-400 to-warm-500 rounded-full flex items-center justify-center shadow-sm ring-2 ring-warm-100">
-                <span className="text-white font-semibold text-base">{chatPartnerName[0]}</span>
+              
+              <div className="flex items-center gap-4">
+                {isFortuneTeller && order.status === 'in_progress' && (
+                  <button
+                    onClick={handleCompleteOrder}
+                    className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+                  >
+                    完成订单
+                  </button>
+                )}
+                
+                <div className="w-14 h-14 bg-gradient-to-br from-warm-400 to-warm-500 rounded-full flex items-center justify-center shadow-sm ring-2 ring-warm-100">
+                  <span className="text-white font-semibold text-base">{chatPartnerName[0]}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -210,7 +248,6 @@ export default function ChatPage() {
               </div>
             ) : (
               messages.map((message) => {
-                const currentUserId = (user as any)?._id || user?.id
                 const isSender = message.senderId._id === currentUserId
                 const isRecalled = message.messageType === 'recall'
                 const canRecall = isSender && !isRecalled && (Date.now() - new Date(message.createdAt).getTime() < 2 * 60 * 1000)
@@ -282,7 +319,7 @@ export default function ChatPage() {
           </div>
 
           {/* 输入框 */}
-          {order.status === 'paid' || order.status === 'completed' ? (
+          {['paid', 'in_progress', 'completed'].includes(order.status) ? (
             <form onSubmit={handleSendMessage} className="border-t border-gray-200/50 p-5 bg-white/80 backdrop-blur-sm">
               <div className="flex gap-3">
                 <input
@@ -319,4 +356,3 @@ export default function ChatPage() {
     </div>
   )
 }
-

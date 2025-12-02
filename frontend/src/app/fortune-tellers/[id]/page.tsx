@@ -146,12 +146,12 @@ export default function FortuneTellerDetailPage() {
                 </div>
                 {/* 只有客户角色才能预约，命理师自己查看时不显示预约按钮 */}
                 {(!user || user.role === 'customer') ? (
-                  <button
-                    onClick={handleBook}
-                    className="w-full sm:w-auto btn-warm px-12 py-4 rounded-xl text-lg font-medium"
-                  >
-                    立即预约
-                  </button>
+                <button
+                  onClick={handleBook}
+                  className="w-full sm:w-auto btn-warm px-12 py-4 rounded-xl text-lg font-medium"
+                >
+                  立即预约
+                </button>
                 ) : (
                   user.role === 'fortune_teller' && (
                     <button

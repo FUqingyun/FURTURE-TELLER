@@ -5,6 +5,68 @@ const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 
+// 获取订单统计数据 (必须放在 /:id 之前)
+router.get('/stats', protect, async (req, res) => {
+  try {
+    const query = {};
+    
+    // 确定查询范围
+    if (req.user.role === 'fortune_teller') {
+      const ft = await FortuneTeller.findOne({ userId: req.user._id });
+      if (ft) {
+        query.fortuneTellerId = ft._id;
+      } else {
+        return res.json({ success: true, data: { pending: 0, earnings: 0, ongoing: 0, completed: 0 } });
+      }
+    } else {
+      query.customerId = req.user._id;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // 并行执行统计查询
+    const [pending, ongoing, completed, todayEarningsResult] = await Promise.all([
+      // 待处理: status 为 paid (已支付但未开始)
+      Order.countDocuments({ ...query, status: 'paid' }),
+      // 进行中: status 为 in_progress
+      Order.countDocuments({ ...query, status: 'in_progress' }),
+      // 已完成: status 为 completed
+      Order.countDocuments({ ...query, status: 'completed' }),
+      // 今日收入聚合查询
+      Order.aggregate([
+        {
+          $match: {
+            ...query,
+            status: { $in: ['paid', 'in_progress', 'completed'] }, // 只要支付过的都算
+            updatedAt: { $gte: today } // 假设以更新时间为准，或者使用 createdAt
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: '$amount' }
+          }
+        }
+      ])
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        pending,
+        ongoing,
+        completed,
+        earnings: todayEarningsResult[0]?.total || 0
+      }
+    });
+
+  } catch (error) {
+    console.error('获取统计失败:', error);
+    res.status(500).json({ success: false, message: '获取统计失败' });
+  }
+});
+
 // 获取所有订单（需要认证）
 router.get('/', protect, async (req, res) => {
   try {
@@ -170,8 +232,15 @@ router.patch('/:id/status', protect, async (req, res) => {
     }
 
     // 检查权限
-    const isOwner = order.customerId.toString() === req.user._id.toString() ||
-                    order.fortuneTellerId.toString() === req.user._id.toString();
+    let isFortuneTellerOwner = false;
+    if (req.user.role === 'fortune_teller') {
+      const ft = await FortuneTeller.findOne({ userId: req.user._id });
+      if (ft && order.fortuneTellerId.toString() === ft._id.toString()) {
+        isFortuneTellerOwner = true;
+      }
+    }
+
+    const isOwner = order.customerId.toString() === req.user._id.toString() || isFortuneTellerOwner;
     
     if (!isOwner && req.user.role !== 'admin') {
       return res.status(403).json({
@@ -182,6 +251,9 @@ router.patch('/:id/status', protect, async (req, res) => {
 
     order.status = status;
     if (status === 'paid') {
+      // 支付完成时间
+    }
+    if (status === 'in_progress') {
       order.startTime = new Date();
     }
     if (status === 'completed') {

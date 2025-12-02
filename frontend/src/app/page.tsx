@@ -26,18 +26,18 @@ export default function Home() {
           {/* 只有未登录用户或普通客户才显示 */}
           {(!user || user.role === 'customer') ? (
             <>
-              {!user && (
-                <div className="flex justify-center gap-4 animate-slide-up">
-                  <Link
-                    href="/register"
-                    className="btn-warm px-8 py-4 rounded-xl text-base font-medium"
-                  >
-                    立即开始
-                  </Link>
-                  <Link
-                    href="/fortune-tellers"
-                    className="btn-minimal px-8 py-4 rounded-xl text-base font-medium"
-                  >
+          {!user && (
+            <div className="flex justify-center gap-4 animate-slide-up">
+              <Link
+                href="/register"
+                className="btn-warm px-8 py-4 rounded-xl text-base font-medium"
+              >
+                立即开始
+              </Link>
+              <Link
+                href="/fortune-tellers"
+                className="btn-minimal px-8 py-4 rounded-xl text-base font-medium"
+              >
                     浏览命理师
                   </Link>
                 </div>
@@ -77,12 +77,12 @@ export default function Home() {
 
         {/* 只有未登录用户或普通客户显示推荐列表 */}
         {(!user || user.role === 'customer') && (
-          <div className="mb-12">
-            <h2 className="text-4xl font-semibold text-gray-900 mb-12 text-center tracking-tight">
+        <div className="mb-12">
+          <h2 className="text-4xl font-semibold text-gray-900 mb-12 text-center tracking-tight">
               精选命理师
-            </h2>
-            <FortuneTellerList />
-          </div>
+          </h2>
+          <FortuneTellerList />
+        </div>
         )}
       </main>
     </div>

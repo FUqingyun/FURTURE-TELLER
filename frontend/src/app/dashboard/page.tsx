@@ -13,8 +13,8 @@ export default function Dashboard() {
   const [stats, setStats] = useState({
     pendingOrders: 0,
     todayEarnings: 0,
-    newCustomers: 0,
-    activeOrders: 0
+    ongoingOrders: 0,
+    completedOrders: 0
   })
   const [loading, setLoading] = useState(true)
 
@@ -30,21 +30,16 @@ export default function Dashboard() {
 
   const fetchStats = async () => {
     try {
-      // 这里可以调用后端 API 获取真实数据
-      // 暂时用模拟数据或简单的 API 调用
-      const response = await api.get('/orders')
-      const orders = response.data.data || []
-      
-      // 简单统计
-      const pending = orders.filter((o: any) => o.status === 'paid').length
-      const active = orders.filter((o: any) => o.status === 'completed').length // 假设 completed 是活跃的，实际应为 processing
-      
-      setStats({
-        pendingOrders: pending,
-        todayEarnings: 0, // 需要后端支持
-        newCustomers: 0, // 需要后端支持
-        activeOrders: active
-      })
+      const response = await api.get('/orders/stats')
+      if (response.data.success) {
+        const data = response.data.data
+        setStats({
+          pendingOrders: data.pending,
+          todayEarnings: data.earnings,
+          ongoingOrders: data.ongoing,
+          completedOrders: data.completed
+        })
+      }
     } catch (error) {
       console.error('获取数据失败', error)
     } finally {
@@ -64,25 +59,32 @@ export default function Dashboard() {
 
         {/* 核心数据卡片 */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          {/* 卡片 1: 待处理订单 */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm font-medium mb-2">待处理订单</div>
             <div className="text-3xl font-bold text-warm-600">{stats.pendingOrders}</div>
             <div className="text-xs text-gray-400 mt-2">需要尽快回复</div>
           </div>
+
+          {/* 卡片 2: 今日收入 */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm font-medium mb-2">今日收入</div>
             <div className="text-3xl font-bold text-gray-900">${stats.todayEarnings}</div>
-            <div className="text-xs text-gray-400 mt-2">本周累计: $0</div>
+            <div className="text-xs text-gray-400 mt-2">本周累计: ${stats.todayEarnings}</div>
           </div>
+
+          {/* 卡片 3: 进行中咨询 (原新客户) */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <div className="text-gray-500 text-sm font-medium mb-2">新客户</div>
-            <div className="text-3xl font-bold text-gray-900">{stats.newCustomers}</div>
-            <div className="text-xs text-gray-400 mt-2">较昨日 +0</div>
-          </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <div className="text-gray-500 text-sm font-medium mb-2">进行中咨询</div>
-            <div className="text-3xl font-bold text-blue-600">{stats.activeOrders}</div>
+            <div className="text-gray-500 text-sm font-medium mb-2">进行中的咨询</div>
+            <div className="text-3xl font-bold text-blue-600">{stats.ongoingOrders}</div>
             <div className="text-xs text-gray-400 mt-2">当前活跃会话</div>
+          </div>
+
+          {/* 卡片 4: 已完成咨询 (原进行中咨询) */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div className="text-gray-500 text-sm font-medium mb-2">已完成咨询</div>
+            <div className="text-3xl font-bold text-green-600">{stats.completedOrders}</div>
+            <div className="text-xs text-gray-400 mt-2">历史服务总数</div>
           </div>
         </div>
 
@@ -121,4 +123,3 @@ export default function Dashboard() {
     </div>
   )
 }
-

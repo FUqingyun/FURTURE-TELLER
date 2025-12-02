@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import api from '@/lib/api'
+import toast from 'react-hot-toast'
 
 interface Order {
   _id: string
@@ -21,6 +22,7 @@ interface Order {
 
 const statusColors: Record<string, string> = {
   paid: 'bg-blue-100 text-blue-800', // 已支付=待接单
+  in_progress: 'bg-yellow-100 text-yellow-800',
   completed: 'bg-green-100 text-green-800',
   cancelled: 'bg-red-100 text-red-800',
   refunded: 'bg-gray-100 text-gray-800'
@@ -28,6 +30,7 @@ const statusColors: Record<string, string> = {
 
 const statusText: Record<string, string> = {
   paid: '待接单',
+  in_progress: '进行中',
   completed: '已完成',
   cancelled: '已取消',
   refunded: '已退款'
@@ -58,6 +61,17 @@ export default function FortuneTellerOrders() {
       console.error('获取订单失败', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleAcceptOrder = async (orderId: string) => {
+    try {
+      await api.patch(`/orders/${orderId}/status`, { status: 'in_progress' })
+      toast.success('接单成功')
+      router.push(`/orders/${orderId}/chat`)
+    } catch (error) {
+      console.error('接单失败', error)
+      toast.error('接单失败，请重试')
     }
   }
 
@@ -93,6 +107,14 @@ export default function FortuneTellerOrders() {
               }`}
             >
               待接单
+            </button>
+            <button
+              onClick={() => setFilter('in_progress')}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                filter === 'in_progress' ? 'bg-warm-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              进行中
             </button>
             <button
               onClick={() => setFilter('completed')}
@@ -133,11 +155,19 @@ export default function FortuneTellerOrders() {
                   
                   <div className="flex gap-3">
                     {order.status === 'paid' && (
-                      <Link
-                        href={`/orders/${order._id}/chat`}
+                      <button
+                        onClick={() => handleAcceptOrder(order._id)}
                         className="px-6 py-2 bg-warm-500 text-white rounded-lg text-sm font-medium hover:bg-warm-600 transition-colors"
                       >
                         立即接单
+                      </button>
+                    )}
+                    {order.status === 'in_progress' && (
+                      <Link
+                        href={`/orders/${order._id}/chat`}
+                        className="px-6 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+                      >
+                        进入咨询
                       </Link>
                     )}
                     {order.status === 'completed' && (
@@ -158,4 +188,3 @@ export default function FortuneTellerOrders() {
     </div>
   )
 }
-
