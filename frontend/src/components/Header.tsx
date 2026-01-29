@@ -54,7 +54,7 @@ export default function Header() {
             href="/" 
             className="text-3xl font-semibold text-gray-900 tracking-tight hover:opacity-80 transition-opacity duration-200"
           >
-            易玄宏
+            易玄弘
           </Link>
           <nav className="flex items-center space-x-4 md:space-x-6">
             {/* 根据角色显示左侧导航项 */}

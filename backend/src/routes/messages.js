@@ -31,7 +31,7 @@ router.get('/order/:orderId', protect, async (req, res) => {
     }
 
     // 检查订单是否已支付
-    if (order.status !== 'paid' && order.status !== 'completed') {
+    if (order.status !== 'paid' && order.status !== 'in_progress' && order.status !== 'completed') {
       return res.status(400).json({
         success: false,
         message: '订单未支付，无法查看消息'
@@ -92,7 +92,7 @@ router.post('/', protect, async (req, res) => {
     }
 
     // 检查订单状态
-    if (order.status !== 'paid' && order.status !== 'completed') {
+    if (order.status !== 'paid' && order.status !== 'in_progress' && order.status !== 'completed') {
       return res.status(400).json({
         success: false,
         message: '订单未支付，无法发送消息'

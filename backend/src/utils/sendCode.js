@@ -56,7 +56,7 @@ const sendEmail = async (email, code) => {
                 您好，
               </p>
               <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 24px; color: #202124;">
-                您正在注册 易玄宏 账号。请使用以下验证码完成注册：
+                您正在注册 易玄弘 账号。请使用以下验证码完成注册：
               </p>
               
               <!-- Verification Code Box -->
@@ -84,7 +84,7 @@ const sendEmail = async (email, code) => {
           <tr>
             <td style="padding: 24px 40px 40px 40px; border-top: 1px solid #e0e0e0;">
               <p style="margin: 0 0 8px 0; font-size: 12px; line-height: 16px; color: #5f6368;">
-                此邮件由 易玄宏 自动发送，请勿回复。
+                此邮件由 易玄弘 自动发送，请勿回复。
               </p>
               <p style="margin: 0; font-size: 12px; line-height: 16px; color: #5f6368;">
                 为了保护您的账号安全，请不要将验证码分享给他人。
@@ -101,11 +101,11 @@ const sendEmail = async (email, code) => {
 
   // 纯文本版本（用于不支持 HTML 的邮件客户端）
   const textContent = `
-易玄宏 验证码
+易玄弘 验证码
 
 您好，
 
-您正在注册 易玄宏 账号。请使用以下验证码完成注册：
+您正在注册 易玄弘 账号。请使用以下验证码完成注册：
 
 验证码：${code}
 
@@ -114,14 +114,14 @@ const sendEmail = async (email, code) => {
 如果您没有请求此验证码，请忽略此邮件。
 
 ---
-此邮件由 易玄宏 自动发送，请勿回复。
+此邮件由 易玄弘 自动发送，请勿回复。
 为了保护您的账号安全，请不要将验证码分享给他人。
   `.trim();
 
   const info = await transporter.sendMail({
-    from: `"易玄宏" <${fromEmail}>`,
+    from: `"易玄弘" <${fromEmail}>`,
     to: email,
-    subject: "易玄宏 - 您的注册验证码",
+    subject: "易玄弘 - 您的注册验证码",
     text: textContent,
     html: htmlContent,
     // 添加邮件头信息，减少被标记为垃圾邮件的可能性

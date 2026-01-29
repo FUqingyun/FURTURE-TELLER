@@ -17,7 +17,16 @@ const io = socketIo(server, {
 
 // 中间件
 app.use(cors());
-app.use(express.json());
+
+// 特殊处理 Stripe Webhook，使其不经过 express.json()
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/payments/webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
+
 app.use(express.urlencoded({ extended: true }));
 
 // 静态文件服务 (用于访问上传的文件)

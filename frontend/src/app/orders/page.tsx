@@ -25,7 +25,8 @@ interface Order {
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
   paid: 'bg-green-100 text-green-800',
-  completed: 'bg-blue-100 text-blue-800',
+  in_progress: 'bg-blue-100 text-blue-800', // 添加进行中状态
+  completed: 'bg-gray-100 text-gray-800',
   cancelled: 'bg-red-100 text-red-800',
   refunded: 'bg-gray-100 text-gray-800'
 }
@@ -33,6 +34,7 @@ const statusColors: Record<string, string> = {
 const statusText: Record<string, string> = {
   pending: '待支付',
   paid: '已支付',
+  in_progress: '进行中', // 添加进行中状态
   completed: '已完成',
   cancelled: '已取消',
   refunded: '已退款'
@@ -137,12 +139,12 @@ export default function OrdersPage() {
                         去支付
                       </Link>
                     )}
-                    {(order.status === 'paid' || order.status === 'completed') && (
+                    {(order.status === 'paid' || order.status === 'in_progress' || order.status === 'completed') && (
                       <Link
                         href={`/orders/${order._id}/chat`}
                         className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-green-700 transition-all font-medium text-center shadow-lg hover:shadow-xl"
                       >
-                        开始聊天
+                        {order.status === 'completed' ? '查看记录' : '开始聊天'}
                       </Link>
                     )}
                   </div>
